@@ -8,7 +8,7 @@
                     @foreach ($documents as $document)
                         @include('catalog.shared.document',['item'=>$document])
                     @endforeach
-                   Gate::allows('manage-users');
+                   
                 </div>
             </div>
         </div>
