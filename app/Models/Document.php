@@ -2,35 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Document extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+    protected $fillable = ['title', 'content', 'version', 'user_id', 'state', 'document_link'];
 
-    protected $fillable=[
-        'slug',
-        'title',
-        'url'
-    ];
-    protected static function boot()
+    public function tags()
     {
-        parent::boot();
-
-        static::creating(function (Document $document ){
-            $document->slug = $document->slug ?? str($document->title)->slug();
-        });
+        return $this->belongsToMany(Tag::class);
     }
-    public function user():BelongsTo{
-        return $this->belongsTo(User::class);
-    }
-    public function scopeHimePage(Builder $query){
-        $query->where('on_home_page',true)
-        ->orderBy('sorting')
-        ->limit('6');
 
+    public function user() {
+        return $this->belongsTo(User::class);   
+    }
+    public function Document_version(): BelongsToMany{
+        return $this->belongsToMany(DocumentVersion::class);
     }
 }

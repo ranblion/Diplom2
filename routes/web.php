@@ -1,23 +1,19 @@
 <?php
 
+use App\Http\Controllers;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DocumentController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/documents/search', [Controllers\DocumentController::class, 'search'])->name('documents.search');
+Route::get('/documents/{id}', [Controllers\DocumentController::class, 'show'])->name('documents.show');
+Route::get('/documents/download/{id}', [Controllers\DocumentController::class, 'download'])->name('documents.download');
+Route::post('/documents/upload', [Controllers\DocumentController::class, 'upload'])->name('documents.upload');
+Route::resources(['documents' => Controllers\DocumentController::class,]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,9 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
-
-Route::get('/documents', [DocumentController::class, 'index']);
+Route::middleware(['role:admin'])->prefix('admin_panel')->group( function () {
+    Route::get('/', [App\Http\Controllers\Admin\HomeController::class , 'index']);
+});
 
 require __DIR__.'/auth.php';

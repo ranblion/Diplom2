@@ -2,10 +2,7 @@
 
 namespace App\Providers;
 
-use FTP\Connection;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Model;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,9 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventLazyLoading(!app()->isProduction());
-        Model::preventSilentlyDiscardingAttributes(!app()->isProduction());
-        //DB::whenQueryingForLongerThan(500, function(Connection $connection){});
-
+        //
     }
 }
